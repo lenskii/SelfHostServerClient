@@ -10,7 +10,7 @@ namespace Client
 {
     class Program
     {
-        static HttpClient client; //= new HttpClient();
+        static HttpClient client;
         static string homePath;                        
         static string currentPath;
 
@@ -35,7 +35,8 @@ namespace Client
         }
 
         static void Main()
-        {                                           
+        {
+            Console.Title = "Virtual File System Client App";
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Client app is starting...");
             Console.Write("Enter server adress: http://localhost:");
@@ -53,21 +54,32 @@ namespace Client
                         break;
                     }                   
                 }
-                catch (Exception e)
+                catch (Exception)
                 {                  
-                    Console.Write("\nInvalid server adress. Try again:\nhttp://localhost:");                  
+                    Console.Write("\nServer adress is invalid. Try again:\nhttp://localhost:");                  
                 }
             }
 
-            MainAsync().GetAwaiter().GetResult();
+            while (true)
+            {
+                try
+                {
+                    MainAsync().GetAwaiter().GetResult();
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Server is not responding...\nPress <Enter> to reconnect.");
+                    Console.ReadLine();
+                }
+            }
         }
 
         static async Task MainAsync()
-        {
-            Console.WriteLine("Success.\n");
+        {           
             Console.ForegroundColor = ConsoleColor.White;          
-            homePath = GetServerAnswer()[0];           
-            Console.WriteLine(homePath);
+            homePath = GetServerAnswer()[0];
+            Console.WriteLine("Success.\n");
+            Console.WriteLine("Type <help> to list supported commands.");
             currentPath = homePath; //for 1st time             
             while (true)
             {
@@ -84,14 +96,21 @@ namespace Client
                         break;
                     case "help":
                         //TODO: add help
-                        Console.Write("Help:\n");
-                        break;
-                    default:
-                        // TODO: server not responding exception
+                        Console.Write(
+     "\ndir                                         | Showing all directories and files in current directory." +       
+     "\ncd  <path>                                  | Move to directory"+
+     "\nmkdir  <name>                               | Create new directory in specified location" +
+     "\nmkfile  <name.extention> <content>          | Create new file with content in specified location" +
+     "\ncopy  <path_to_1st_file> <path_to_2nd_file> | Copying specified file into another location and name." +
+     "\nmove  <path_to_1st_file> <path_to_2nd_file> | Moving specified file into another location and name." +
+     "\ncls                                         | Clearing command prompt window" +
+     "\nexit                                        | Exit client.\n"
+                            );
 
+                        break;
+                    default:                       
                         Console.WriteLine();
-                        await PostServerQuestion(input);
-                        
+                        await PostServerQuestion(input);                       
                         currentPath = GetServerAnswer()[0];                       
                         // Skip(1) - full server output, without current path string
                         foreach (string element in GetServerAnswer().Skip(1))

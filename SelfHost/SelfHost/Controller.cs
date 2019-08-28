@@ -30,8 +30,7 @@ namespace SelfHost
             valuesList.Clear();  //clearing list every new input            
             Commands.CommandListener(value);
             valuesList.Insert(0, Directory.GetCurrentDirectory()); //for displaying local path
-            var response = Request.CreateResponse(HttpStatusCode.Created, valuesList);
-            
+            var response = Request.CreateResponse(HttpStatusCode.Created, valuesList);            
             return response;         
         }
 

@@ -11,13 +11,13 @@ namespace SelfHost
     {
         public static String homePath = Directory.GetCurrentDirectory() + "\\UserFiles";
         static HttpClient client = new HttpClient();
-        public static string baseAddress;// = "http://localhost:9000/";
+        public static string baseAddress;
         static int basePort;
         
         static void Main()
         {
-            Console.Write("Server adress: http://localhost:");
-
+            Console.Title = "Virtual File System Server App";
+            Console.Write("Input server adress:\nhttp://localhost:");
             while (true)
             {
                 try
@@ -25,11 +25,9 @@ namespace SelfHost
                     basePort = Int32.Parse(Console.ReadLine());
                     if (basePort < 1000)
                     {
-                        Console.Write("Port must be 4-digit at least. Try again:\nhttp://localhost:");
-                        
+                        Console.Write("Port must be 4-digit at least. Try again:\nhttp://localhost:");                       
                         continue;
                     }
-
                     break;
                 }
                 catch (FormatException)
@@ -56,7 +54,14 @@ namespace SelfHost
                 Console.Clear();
                 Console.WriteLine("Server started.");
                 Console.WriteLine("Server adress: "+ baseAddress);
-                Console.ReadLine();
+                Console.WriteLine("Type <exit> to close the server.");
+                Console.WriteLine("User inputs listed below:");
+                while (true)
+                {
+                    if (Console.ReadLine() == "exit")
+                    break;
+                }
+               
             }         
         }
     }
