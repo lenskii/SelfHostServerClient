@@ -148,7 +148,6 @@ namespace SelfHost
         static void copy(IEnumerable<string> obj)
         {
             string[] copyFileProperties = obj.ToArray();
-
             string copyFullFileNameFrom = Program.homePath + copyFileProperties[0].Replace("C:", "");
             string copyFullFileNameTo   = Program.homePath + copyFileProperties[1].Replace("C:", "");
             //check exist
@@ -159,12 +158,13 @@ namespace SelfHost
 
         static void dir()
         {
+            
             //Delete unused exception info - костыль :С
             ValuesController.valuesList.RemoveAt(0);
            //List of folders in current folder           
-           String[] @currentFolders = Directory.GetDirectories(Directory.GetCurrentDirectory());
+            string[] currentFolders = Directory.GetDirectories(Directory.GetCurrentDirectory());           
             //List of files in current folder
-            String[] @currentFiles = Directory.GetFiles(Directory.GetCurrentDirectory());
+            string[] currentFiles = Directory.GetFiles(Directory.GetCurrentDirectory());
             foreach (string element in currentFolders)
             {
                 Console.WriteLine("C:{0}", element.Replace(Program.homePath, ""));

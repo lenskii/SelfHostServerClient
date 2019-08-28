@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SelfHost
@@ -10,21 +11,41 @@ namespace SelfHost
     {
         public static String homePath = Directory.GetCurrentDirectory() + "\\UserFiles";
         static HttpClient client = new HttpClient();
-        public static string baseAddress = "http://localhost:9000/";
-
+        public static string baseAddress;// = "http://localhost:9000/";
+        static int basePort;
+        
         static void Main()
         {
+            Console.Write("Server adress: http://localhost:");
+
+            while (true)
+            {
+                try
+                {
+                    basePort = Int32.Parse(Console.ReadLine());
+                    if (basePort < 1000)
+                    {
+                        Console.Write("Port must be 4-digit at least. Try again:\nhttp://localhost:");
+                        
+                        continue;
+                    }
+
+                    break;
+                }
+                catch (FormatException)
+                {                   
+                    Console.Write("\nInvalid server adress. Try again:\nhttp://localhost:");
+                }
+            }
+
+            Console.WriteLine(basePort.ToString());
+            baseAddress = "http://localhost:" + basePort.ToString() + "/";
+            Console.WriteLine(baseAddress);
             MainAsync().GetAwaiter().GetResult();
         }
 
         static async Task MainAsync()
-        {            
-            //Console.WriteLine("Server adress:");
-            //string baseAddress = Console.ReadLine();
-            //TODO: Exceptions with for loop
-
-            //Or just keep this adress
-                                  
+        {           
             using (WebApp.Start<Startup>(url: baseAddress))
              {                                                            
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\UserFiles");
