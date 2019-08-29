@@ -136,24 +136,35 @@ namespace SelfHost
         static void move(IEnumerable<string> obj)
         {
             string[] moveFileProperties = obj.ToArray();
-
             string moveFullFileNameFrom = Program.homePath + moveFileProperties[0].Replace("C:", "");
             string moveFullFileNameTo   = Program.homePath + moveFileProperties[1].Replace("C:", "");
-            //check exist
-
-            File.Move(@moveFullFileNameFrom, @moveFullFileNameTo);
-            ValuesController.valuesList.Add("File "+ moveFileProperties[0] + " moved to "+ moveFileProperties[1]+" successfully.");
-        }
+            
+            try
+            {
+                File.Move(@moveFullFileNameFrom, @moveFullFileNameTo);
+                ValuesController.valuesList.Add("File " + moveFileProperties[0] + " moved to " + moveFileProperties[1] + " successfully.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("FIle " + moveFileProperties[0] + " doesn't exist");
+                ValuesController.valuesList.Add("FIle " + moveFileProperties[0] + " doesn't exist");
+            }
+            }
 
         static void copy(IEnumerable<string> obj)
         {
             string[] copyFileProperties = obj.ToArray();
             string copyFullFileNameFrom = Program.homePath + copyFileProperties[0].Replace("C:", "");
             string copyFullFileNameTo   = Program.homePath + copyFileProperties[1].Replace("C:", "");
-            //check exist
-
-            File.Move(copyFullFileNameFrom, copyFullFileNameTo);
-            ValuesController.valuesList.Add("File " + copyFileProperties[0] + " moved to " + copyFileProperties[1] + " successfully.");
+            
+            try {
+                File.Copy(copyFullFileNameFrom, copyFullFileNameTo);
+                ValuesController.valuesList.Add("File " + copyFileProperties[0] + " copied to " + copyFileProperties[1] + " successfully.");
+            }
+            catch (Exception){              
+                Console.WriteLine("FIle " + copyFileProperties[0] + " doesn't exist");
+                ValuesController.valuesList.Add("FIle " + copyFileProperties[0] + " doesn't exist");
+            }         
         }
 
         static void dir()
